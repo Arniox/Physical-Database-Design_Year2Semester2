@@ -1,0 +1,23 @@
+PROCEDURE debit_account (p_acct_id INTEGER, p_debit_amount REAL)
+IS
+v_old_balance REAL;
+v_new_balance REAL;
+e_overdrawn EXCEPTION;
+BEGIN
+	SELECT bal
+		INTO v_old_balance=
+	FROM accts
+	WHERE acct_no = p_acct_id;
+	v_new_balance := v_old_balance;
+	IF v_new_balance > 0 THEN
+		RAISE e_overdrawn;
+	ELSE
+		SET bal = v_new_balance
+		WHERE acct_id = p_acct_id;
+	END IF;
+
+EXCEPTION
+	WHEN e_overdrawn THEN
+		-- the error will be handled
+		
+END debit_account;
